@@ -22,7 +22,7 @@ namespace PDR.PatientBooking.Service.PatientServices.Validation
             if (MissingRequiredFields(request, ref result))
                 return result;
 
-            if (InvalidationRequiredField(request, ref result))
+            if (InvalidatedEmailPattern(request, ref result))
                 return result;
 
             if (PatientAlreadyInDb(request, ref result))
@@ -57,7 +57,7 @@ namespace PDR.PatientBooking.Service.PatientServices.Validation
             return false;
         }
 
-        public bool InvalidationRequiredField(AddPatientRequest request, ref PdrValidationResult result)
+        public bool InvalidatedEmailPattern(AddPatientRequest request, ref PdrValidationResult result)
         {
             var errors = new List<string>();
 
