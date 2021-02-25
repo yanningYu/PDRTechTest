@@ -22,6 +22,9 @@ namespace PDR.PatientBooking.Service.DoctorServices.Validation
             if (MissingRequiredFields(request, ref result))
                 return result;
 
+            if (InvalidationRequiredField(request, ref result))
+                return result;
+
             if (DoctorAlreadyInDb(request, ref result))
                 return result;
 
@@ -49,6 +52,36 @@ namespace PDR.PatientBooking.Service.DoctorServices.Validation
             }
 
             return false;
+        }
+
+        public bool InvalidationRequiredField(AddDoctorRequest request, ref PdrValidationResult result)
+        {
+            var errors = new List<string>();
+
+            if (!IsValidEmail(request.Email))
+            {
+                errors.Add("Email must be a valid email address");
+            }
+               
+            if (errors.Any())
+            {
+                result.PassedValidation = false;
+                result.Errors.AddRange(errors);
+                return true;
+            }
+
+            return false;
+        }
+        
+        private bool IsValidEmail(string email)
+        {
+            try {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch {
+                return false;
+            }
         }
 
         private bool DoctorAlreadyInDb(AddDoctorRequest request, ref PdrValidationResult result)
