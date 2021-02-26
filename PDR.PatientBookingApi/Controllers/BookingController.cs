@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using PDR.PatientBooking.Service;
+using PDR.PatientBooking.Service.BookingServices;
 using PDR.PatientBooking.Service.BookingServices.Requests;
 
 namespace PDR.PatientBookingApi.Controllers
@@ -61,6 +62,24 @@ namespace PDR.PatientBookingApi.Controllers
             {
                 _bookingService.AddBooking(request);
                 return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpDelete()]
+        public IActionResult CancelBookingAppointment(Guid id)
+        {
+            try
+            {
+                var nextAppointment = _bookingService.CancelBookingAppointment(id);
+                return Ok(nextAppointment);
             }
             catch (ArgumentException ex)
             {
